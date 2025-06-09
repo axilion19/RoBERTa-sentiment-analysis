@@ -1,38 +1,13 @@
-
 import torch
-from transformers import RobertaModel, RobertaTokenizer
-
-class RobertaClass(torch.nn.Module):
-    def __init__(self):
-        super(RobertaClass, self).__init__()
-        self.l1 = RobertaModel.from_pretrained("roberta-base")
-        self.pre_classifier = torch.nn.Linear(768, 768)
-        self.dropout = torch.nn.Dropout(0.3)
-        self.classifier = torch.nn.Linear(768, 2)
-
-    def forward(self, input_ids, attention_mask):
-        output_1 = self.l1(input_ids=input_ids, attention_mask=attention_mask)
-        hidden_state = output_1[0]
-        pooler = hidden_state[:, 0]
-        pooler = self.pre_classifier(pooler)
-        pooler = torch.nn.ReLU()(pooler)
-        pooler = self.dropout(pooler)
-        output = self.classifier(pooler)
-        return output
+from transformers import RobertaTokenizer, RobertaForSequenceClassification
 
 class SentimentAnalyzer:
-    def __init__(self, model_path="models/model_weights.pth", max_len=256):
-        self.model = RobertaClass()
-        self.tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
-        
-        try:    
-            self.model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-            self.model.eval()
-        except FileNotFoundError:
-            print(f"Model weights not found. Please ensure '{model_path}' exists.")
-            exit(1)
+    def __init__(self, model_id="axilion/RoBERTa-movie-sentiment-analyzer", max_len=512):
+        self.model = RobertaForSequenceClassification.from_pretrained(model_id)
+        self.tokenizer = RobertaTokenizer.from_pretrained(model_id)
+        self.model.eval()
         self.max_len = max_len
-        
+
     def predict(self, reviews):
         if isinstance(reviews, str):
             reviews = [reviews]
@@ -47,17 +22,17 @@ class SentimentAnalyzer:
                 return_tensors="pt"
             )
 
-            logits = self.model(enc["input_ids"], enc["attention_mask"])  
-            probs  = torch.softmax(logits, dim=-1)                    
-            preds  = probs.argmax(dim=-1).cpu().numpy()               
+            logits = self.model(**enc).logits
+            probs  = torch.softmax(logits, dim=-1)
+            preds  = probs.argmax(dim=-1).cpu().numpy()
 
             for idx, review in enumerate(reviews):
                 label = "POSITIVE" if preds[idx] == 1 else "NEGATIVE"
                 score = probs[idx, preds[idx]].item()
-                results.append({"label": label, "score": round(score, 3)})
+                results.append({"review": review, "label": label, "score": round(score, 3)})
 
         return results
-
+    
 if __name__ == "__main__":
     analyzer= SentimentAnalyzer()
     samples = [

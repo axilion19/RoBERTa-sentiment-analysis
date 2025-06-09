@@ -2,3 +2,5 @@
 .venv/
 # Model files
 *.pth
+*.sh
+__pycache__/
