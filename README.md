@@ -1,8 +1,8 @@
 # 🎬 RoBERTa-Based Sentiment Analysis on IMDB Reviews
 
-This project fine-tunes a pre-trained RoBERTa model to classify IMDB movie reviews as **positive** or **negative**.  
-It includes data preprocessing, model training, serving with FastAPI, a user interface built with Streamlit, and containerization with Docker.  
-The model is also hosted on the Hugging Face Hub.
+- This project fine-tunes a pre-trained RoBERTa model to classify IMDB movie reviews as **positive** or **negative**.
+- It includes data preprocessing, model training, serving with FastAPI, a user interface built with Streamlit, and containerization with Docker.
+- The model is also hosted on the Hugging Face Hub.
 
 ---
 
@@ -72,7 +72,7 @@ streamlit run src/streamlit_app.py
 
 ---
 
-## 🐳 Docker ile Çalıştırma
+## 🐳 Run with Docker
 
 1. Build the Docker image:
 
