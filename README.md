@@ -110,6 +110,6 @@ print(classifier("The movie was surprisingly touching and well-acted."))
 
 You can try the interactive demo on Hugging Face Spaces:
 
-[![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-spaces-lg.svg)](https://huggingface.co/spaces/axilion/movie-review-sentiment-analysis)
+[![Open in Spaces]🤗](https://huggingface.co/spaces/axilion/movie-review-sentiment-analysis)
 
 ---
